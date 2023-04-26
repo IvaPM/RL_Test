@@ -3,12 +3,12 @@
 in terminal navigate to rest_api folder
 
 run command to build docker image:
-<code>docker build -t <image_name> .</code>
+<code>docker build -t "image_name" .</code>
 
 to start image in docker desktop run command:
-<code>docker run -p <port>:5000 <image_name></code>
+<code>docker run -p "port":5000 "image_name"</code>
 
-swagger documentation: <code>http://localhost:<port>/swagger-ui</code>
+swagger documentation: <code>http://localhost:"port"/swagger-ui</code>
 
 Task 1. - "/fullname" endpoint
 
