@@ -7,8 +7,8 @@ class FullNameSchema(Schema):
     @post_load
     def unwrap_first_names(self, data, **kwargs):
         try:
-            [int(x[1]) for x in data["first_names"]]
-            [int(x[1]) for x in data["last_names"]]
+            data["first_names"] = sorted(data["first_names"], key=lambda x: int(x[1]))
+            data["last_names"] = sorted(data["last_names"], key=lambda x: int(x[1]))
         except:
             raise ValidationError("Id string must contain digits only")
         

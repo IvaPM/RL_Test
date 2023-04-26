@@ -17,7 +17,7 @@ class Braces(MethodView):
         if not re.search("[\(\)\[\]\{\}]", txt):
             return {"response_text": "There are no braces in the given input"}
         
-        braces_dict = {"(" : ")", "{":"}", "[":"]"}
+        braces_dict = {"(":")", "{":"}", "[":"]"}
         braces_stack = []
         braces_index = []
         response_text = str()

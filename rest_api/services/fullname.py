@@ -10,8 +10,8 @@ class FullName(MethodView):
     @blp.arguments(FullNameSchema)
     @blp.response(200, FullNameResponseSchema)
     def post(self, body): 
-        names = sorted(body["first_names"], key=lambda x: int(x[1]))
-        surnames = sorted(body["last_names"], key=lambda x: int(x[1]))
+        names = body["first_names"].copy()
+        surnames = body["last_names"].copy()
         full_names = [list([x[0]]+y) for x in names for y in surnames if x[1]==y[1]]
         
         unpaired={}
