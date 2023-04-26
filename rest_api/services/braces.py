@@ -1,42 +1,41 @@
+import re
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from schemas.schemas import Braces, BracesResponse
-import re
 
 blp = Blueprint("bracesAPI", __name__, description = "Checks if the braces are balanced.")
 
 @blp.route("/braces")
 class Braces(MethodView):
-    @blp.arguments(Braces, content_type="text/plain")
+
+    @blp.arguments(Braces, content_type = "text/plain")
     @blp.response(200, BracesResponse)
     def post(self, text):
-        txt = re.sub("[\n\t\r]", "", str(request.get_data(as_text=1)))
-        if not re.search("[\(\)\[\]\{\}]",txt):
+        txt = re.sub("[\n\t\r]", "", str(request.get_data(as_text = True)))
+        
+        if not re.search("[\(\)\[\]\{\}]", txt):
             return {"response_text": "There are no braces in the given input"}
+        
         braces_dict = {"(" : ")", "{":"}", "[":"]"}
         braces_stack = []
         braces_index = []
-        response_text=str()
-        
-        index=1
+        response_text = str()
+        index = 1
         for c in txt:
-
             if c in braces_dict.keys():
                 braces_stack.append(c)
                 braces_index.append(index)
             elif c in braces_dict.values():
-
-                if len(braces_stack)==0:
+                if not braces_stack:
                     response_text += c
                     return {"response_text": response_text + " << brace is unbalanced"}, 400
                 else:
                     last_opened_brace = braces_stack.pop()
                     unbalanced_brace_position = braces_index.pop()
-                    if c != braces_dict[last_opened_brace]:
+                    if c not in braces_dict[last_opened_brace]:
                         response_text=response_text[:unbalanced_brace_position]
-                        return {"response_text": response_text + " << brace is unbalanced"}, 400
-                    
+                        return {"response_text": response_text + " << brace is unbalanced"}, 400        
             index+=1 
             response_text += c
            
