@@ -10,17 +10,24 @@ class FullName(MethodView):
     @blp.arguments(FullNameSchema)
     @blp.response(200, FullNameResponseSchema)
     def post(self, body): 
-        names = body["first_names"].copy()
-        surnames = body["last_names"].copy()
-        full_names = [list([x[0]]+y) for x in names for y in surnames if x[1]==y[1]]
+        names = {x[1]:x[0] for x in body["first_names"]}
+        surnames = {x[1]:x[0] for x in body["last_names"]}
+
+        full_names=[]
+        first_names=[]
         
+        for x in names:
+            if x in surnames.keys():
+                full_names.append([names[x], surnames[x], x])
+                surnames.pop(x)
+            else:
+                first_names.append([x, names[x]])
+    
         unpaired={}
-        [names.remove(x) for x in body["first_names"] for y in full_names if x[1]==y[2] if x in names]
-        if names:
-            unpaired["first_names"]=names
-        [surnames.remove(x) for x in body["last_names"] for y in full_names if x[1]==y[2] if x in surnames]
+        if first_names:
+            unpaired["first_names"] = first_names
         if surnames:
-            unpaired["last_names"]=surnames
+            unpaired["last_names"]=[[value, key] for key, value in surnames.items()]
         
         response = {"full_names": full_names}
         if unpaired:

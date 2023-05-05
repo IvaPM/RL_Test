@@ -19,29 +19,27 @@ class Braces(MethodView):
         
         braces_dict = {"(":")", "{":"}", "[":"]"}
         braces_stack = []
-        braces_index = []
         response_text = str()
-        index = 1
-        for c in txt:
+        
+        for index, c in enumerate(txt):
             if c in braces_dict.keys():
-                braces_stack.append(c)
-                braces_index.append(index)
+                braces_stack.append({index+1:c})
             elif c in braces_dict.values():
                 if not braces_stack:
                     response_text += c
                     return {"response_text": response_text + " << brace is unbalanced"}, 400
                 else:
                     last_opened_brace = braces_stack.pop()
-                    unbalanced_brace_position = braces_index.pop()
-                    if c not in braces_dict[last_opened_brace]:
-                        response_text=response_text[:unbalanced_brace_position]
+                    val = list(last_opened_brace.values())
+                    i = list(last_opened_brace.keys())
+                    if c not in braces_dict[val[0]]:
+                        response_text=response_text[:i[0]]
                         return {"response_text": response_text + " << brace is unbalanced"}, 400        
-            index+=1 
             response_text += c
            
         if braces_stack:
-            unbalanced_brace_position = braces_index[0]
-            response_text=response_text[:unbalanced_brace_position]
+            unbalanced_brace_position = list(braces_stack[0].keys())
+            response_text=response_text[:unbalanced_brace_position[0]]
             return {"response_text": response_text + " << brace is unbalanced"}, 400
         else:
             response_text={"response_text": "Braces are balanced."}

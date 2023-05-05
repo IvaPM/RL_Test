@@ -3,9 +3,12 @@ from cachedFunction import CachedFunction
 
 def cache(function):
     cached_functions = {}
+
     def wrapper_function(*args, **kwargs):
-        key = function.__name__ + str(args) + str(kwargs)
+
+        key = str(args) + str(kwargs)
         cached_function=cached_functions.get(key)
+        
         if (cached_function is not None 
             and cached_function.countdown_time > time.time() 
             and cached_function.counter < 11):
